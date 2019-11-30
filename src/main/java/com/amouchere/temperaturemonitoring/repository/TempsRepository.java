@@ -36,7 +36,7 @@ public class TempsRepository {
         return repo.entrySet().stream().map(e -> TempsByLocation.builder().location(e.getKey()).data(e.getValue()).build()).collect(Collectors.toList());
     }
 
-    @PostConstruct
+  //  @PostConstruct
     public void initData(){
         TempDate newEntry1 = TempDate.builder().dateTime(LocalDateTime.now()).value(20).build();
         TempDate newEntry2 = TempDate.builder().dateTime(LocalDateTime.now().minusHours(1)).value(21).build();
