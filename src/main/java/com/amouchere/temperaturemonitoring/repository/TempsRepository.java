@@ -7,25 +7,31 @@ import com.amouchere.temperaturemonitoring.domain.TempsByLocation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class TempsRepository {
 
-    private Map<String, List<TempDate>> repo = new HashMap<>();
+    private static final int MAX = 240;
+    private Map<String, LinkedList<TempDate>> repo = new HashMap<>();
 
     public void addTemps(Temp temp) {
         TempDate newEntry = TempDate.builder().dateTime(LocalDateTime.now()).value(temp.getValue()).build();
 
         if (repo.containsKey(temp.getLocation())) {
-            List<TempDate> temps = repo.get(temp.getLocation());
+            LinkedList<TempDate> temps = repo.get(temp.getLocation());
             temps.add(newEntry);
+            if (temps.size() > MAX ) {
+                temps.removeFirst();
+            }
         } else {
-            List<TempDate> list = new ArrayList<>();
+            LinkedList<TempDate> list = new LinkedList<>();
             list.add(newEntry);
             repo.put(temp.getLocation(), list);
         }
@@ -34,21 +40,6 @@ public class TempsRepository {
 
     public List<TempsByLocation> read() {
         return repo.entrySet().stream().map(e -> TempsByLocation.builder().location(e.getKey()).data(e.getValue()).build()).collect(Collectors.toList());
-    }
-
-  //  @PostConstruct
-    public void initData(){
-        TempDate newEntry1 = TempDate.builder().dateTime(LocalDateTime.now()).value(20).build();
-        TempDate newEntry2 = TempDate.builder().dateTime(LocalDateTime.now().minusHours(1)).value(21).build();
-        TempDate newEntry3 = TempDate.builder().dateTime(LocalDateTime.now().minusHours(2)).value(16).build();
-        TempDate newEntry4 = TempDate.builder().dateTime(LocalDateTime.now().minusHours(3)).value(15).build();
-        List<TempDate> list = new ArrayList<>();
-        list.add(newEntry1);
-        list.add(newEntry2);
-        list.add(newEntry3);
-        list.add(newEntry4);
-        repo.put("ch1", list);
-
     }
 }
 
