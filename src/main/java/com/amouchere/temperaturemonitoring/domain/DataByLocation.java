@@ -1,15 +1,13 @@
 package com.amouchere.temperaturemonitoring.domain;
 
 import lombok.Builder;
-import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@lombok.Data
 @Builder
-public class TempsByLocation {
+public class DataByLocation {
 
     private String location;
-    private List<TempDate> data;
+    private List<Payload> data;
 }

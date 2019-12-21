@@ -1,9 +1,8 @@
 package com.amouchere.temperaturemonitoring.repository;
 
 
-import com.amouchere.temperaturemonitoring.domain.Temp;
-import com.amouchere.temperaturemonitoring.domain.TempDate;
-import com.amouchere.temperaturemonitoring.domain.TempsByLocation;
+import com.amouchere.temperaturemonitoring.domain.Payload;
+import com.amouchere.temperaturemonitoring.domain.DataByLocation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,27 +18,27 @@ import java.util.stream.Collectors;
 public class TempsRepository {
 
     private static final int MAX = 240;
-    private Map<String, LinkedList<TempDate>> repo = new HashMap<>();
+    private Map<String, LinkedList<Payload>> repo = new HashMap<>();
 
-    public void addTemps(Temp temp) {
-        TempDate newEntry = TempDate.builder().dateTime(LocalDateTime.now()).value(temp.getValue()).build();
+    public void addTemps(String location, Payload payload) {
+        payload.setDateTime(LocalDateTime.now());
 
-        if (repo.containsKey(temp.getLocation())) {
-            LinkedList<TempDate> temps = repo.get(temp.getLocation());
-            temps.add(newEntry);
-            if (temps.size() > MAX ) {
+        if (repo.containsKey(location)) {
+            LinkedList<Payload> temps = repo.get(location);
+            temps.add(payload);
+            if (temps.size() > MAX) {
                 temps.removeFirst();
             }
         } else {
-            LinkedList<TempDate> list = new LinkedList<>();
-            list.add(newEntry);
-            repo.put(temp.getLocation(), list);
+            LinkedList<Payload> list = new LinkedList<>();
+            list.add(payload);
+            repo.put(location, list);
         }
 
     }
 
-    public List<TempsByLocation> read() {
-        return repo.entrySet().stream().map(e -> TempsByLocation.builder().location(e.getKey()).data(e.getValue()).build()).collect(Collectors.toList());
+    public List<DataByLocation> read() {
+        return repo.entrySet().stream().map(e -> DataByLocation.builder().location(e.getKey()).data(e.getValue()).build()).collect(Collectors.toList());
     }
 }
 

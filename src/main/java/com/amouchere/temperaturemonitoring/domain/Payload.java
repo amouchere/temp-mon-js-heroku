@@ -1,14 +1,14 @@
 package com.amouchere.temperaturemonitoring.domain;
 
 import lombok.Builder;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
+@lombok.Data
 @Builder
-public class TempDate {
+public class Payload {
 
     private LocalDateTime dateTime;
-    private int value;
+    private float temperature;
+    private float humidity;
 }
