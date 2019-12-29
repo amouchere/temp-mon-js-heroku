@@ -18,7 +18,7 @@ import java.util.List;
 public class TempController {
 
     @Autowired
-    BuildProperties buildProperties;
+    private BuildProperties buildProperties;
 
     private TempsRepository repo;
 
@@ -29,21 +29,33 @@ public class TempController {
 
     @PostMapping("/data")
     public void temp(@RequestBody Payload temp, @RequestParam("location") String location) {
-        log.info(" ! new data for location {} -> {}", location, temp.toString());
+        log.info("New data for location {} -> {}", location, temp.toString());
         repo.addTemps(location, temp);
-        repo.read();
+        repo.read(location);
     }
 
     @GetMapping("/data")
+    public List<Payload> temp(@RequestParam("location") String location) {
+        log.info("Get data by location {}", location);
+        return repo.read(location);
+    }
+
+    @Deprecated
+    @GetMapping("/dataa")
     public List<DataByLocation> temp() {
         log.info("Get data !");
         return repo.read();
+    }
 
+    @GetMapping("/data/locations")
+    public List<String> getLocation() {
+        log.info("Get location !");
+        return repo.readLocation();
     }
 
     @PostConstruct
     public void postConstruct() {
-        log.info("Version {} ", buildProperties.getVersion());
+        log.info("Version {}", buildProperties.getVersion());
     }
 
 }

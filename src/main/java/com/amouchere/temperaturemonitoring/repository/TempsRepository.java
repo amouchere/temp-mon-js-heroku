@@ -1,8 +1,8 @@
 package com.amouchere.temperaturemonitoring.repository;
 
 
-import com.amouchere.temperaturemonitoring.domain.Payload;
 import com.amouchere.temperaturemonitoring.domain.DataByLocation;
+import com.amouchere.temperaturemonitoring.domain.Payload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +39,14 @@ public class TempsRepository {
 
     public List<DataByLocation> read() {
         return repo.entrySet().stream().map(e -> DataByLocation.builder().location(e.getKey()).data(e.getValue()).build()).collect(Collectors.toList());
+    }
+
+    public List<Payload> read(String location) {
+        return repo.get(location);
+    }
+
+    public List<String> readLocation() {
+        return repo.keySet().stream().collect(Collectors.toList());
     }
 }
 
