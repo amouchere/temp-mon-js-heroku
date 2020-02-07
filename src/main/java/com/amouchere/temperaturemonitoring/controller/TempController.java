@@ -40,13 +40,6 @@ public class TempController {
         return repo.read(location);
     }
 
-    @Deprecated
-    @GetMapping("/dataa")
-    public List<DataByLocation> temp() {
-        log.info("Get data !");
-        return repo.read();
-    }
-
     @GetMapping("/data/locations")
     public List<String> getLocation() {
         log.info("Get location !");
